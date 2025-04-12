@@ -1,0 +1,43 @@
+---
+layout: default
+---
+
+<div class="album-page">
+  <div class="container">
+    <header class="album-header">
+      <h1 class="album-title">{{ page.title }}</h1>
+      <p class="album-date">{{ page.date | date: "%B %d, %Y" }}</p>
+      <p class="album-description">{{ page.description }}</p>
+    </header>
+
+    {% assign album_dir = 'photos/' | append: page.slug %}
+    {% assign all_files = site.static_files %}
+    {% assign image_files = '' | split: '' %}
+    
+    {% for file in all_files %}
+      {% if file.path contains album_dir %}
+        {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+          {% assign image_files = image_files | push: file %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if image_files.size > 0 %}
+      <div class="gallery">
+        {% for image in image_files %}
+          <div class="gallery-item">
+            <a href="{{ image.path | relative_url }}" class="lightbox" data-title="{{ image.name | replace: image.extname, '' | replace: '-', ' ' | replace: '_', ' ' | capitalize }}">
+              <img src="{{ image.path | relative_url }}" alt="{{ image.name | replace: image.extname, '' | replace: '-', ' ' | replace: '_', ' ' | capitalize }}">
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-photos">No photos found in this album.</p>
+    {% endif %}
+
+    <div class="album-nav">
+      <a href="{{ '/' | relative_url }}" class="back-link">← Back to Albums</a>
+    </div>
+  </div>
+</div>

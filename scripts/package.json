@@ -1,0 +1,14 @@
+{
+  "name": "photo-gallery-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for managing the photo gallery website",
+  "main": "create_album.js",
+  "scripts": {
+    "create-album": "node create_album.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

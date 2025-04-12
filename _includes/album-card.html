@@ -1,0 +1,29 @@
+{% assign album_dir = 'photos/' | append: album.slug %}
+{% assign all_files = site.static_files %}
+{% assign image_files = '' | split: '' %}
+
+{% for file in all_files %}
+  {% if file.path contains album_dir %}
+    {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+      {% assign image_files = image_files | push: file %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if image_files.size > 0 %}
+  {% assign cover_image = image_files[0] %}
+  {% assign cover_url = cover_image.path | relative_url %}
+{% else %}
+  {% assign cover_url = "/assets/images/placeholder.jpg" | relative_url %}
+{% endif %}
+
+<div class="album-card">
+  <a href="{{ album.url | relative_url }}" class="album-link">
+    <div class="album-cover" style="background-image: url('{{ cover_url }}')">
+      <div class="album-overlay">
+        <h2 class="album-title">{{ album.title }}</h2>
+        <p class="album-date">{{ album.date | date: "%B %Y" }}</p>
+      </div>
+    </div>
+  </a>
+</div>
