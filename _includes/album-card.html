@@ -1,4 +1,6 @@
-{% assign album_dir = 'photos/' | append: album.slug %}
+{% assign album_slug = album.slug | default: album.path %}
+{% assign album_dir = 'photos/' | append: album_slug %}
+
 {% assign all_files = site.static_files %}
 {% assign image_files = '' | split: '' %}
 

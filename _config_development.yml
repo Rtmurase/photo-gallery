@@ -1,0 +1,8 @@
+# Development-specific settings
+# This file overrides settings in _config.yml when running locally
+
+# Set baseurl to empty for local development
+baseurl: ""
+
+# Set to false for local development
+github_pages: false

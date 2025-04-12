@@ -3,8 +3,12 @@ title: SAUCY.LIFE
 email: your-email@example.com
 description: >-
   Personal photography portfolio
-baseurl: "/photo-gallery" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/photo-gallery" # the subpath of your site for GitHub Pages
+url: "https://rtmurase.github.io" # the base hostname & protocol for your site
+
+# Jekyll environment settings (used for conditional logic)
+# This helps us handle different environments (local vs GitHub Pages)
+github_pages: true
 
 # Build settings
 markdown: kramdown

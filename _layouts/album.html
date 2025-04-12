@@ -10,7 +10,9 @@ layout: default
       <p class="album-description">{{ page.description }}</p>
     </header>
 
-    {% assign album_dir = 'photos/' | append: page.slug %}
+    {% assign album_slug = page.slug | default: page.path %}
+    {% assign album_dir = 'photos/' | append: album_slug %}
+    
     {% assign all_files = site.static_files %}
     {% assign image_files = '' | split: '' %}
     

@@ -52,11 +52,38 @@ async function createAlbum() {
     
     // Get album information from the user
     const title = await askQuestion('Album title: ');
-    const description = await askQuestion('Album description: ');
     
-    // Get date with default to today
-    let dateInput = await askQuestion('Album date (YYYY-MM-DD), leave blank for today: ');
-    const date = dateInput.trim() || new Date().toISOString().split('T')[0];
+    // Get date with default to today, but in MM-YY format
+    let dateInput = await askQuestion('Album date (MM-YY), leave blank for current month: ');
+    
+    // Process the date to ensure it's in YYYY-MM-01 format for Jekyll
+    let date;
+    if (dateInput.trim() === '') {
+      // Use current year and month with day set to 1
+      const now = new Date();
+      date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    } else {
+      // Parse the provided month and year from MM-YY format
+      const parts = dateInput.trim().split('-');
+      if (parts.length === 2) {
+        // Get month and add 20 prefix to year
+        const month = parts[0].padStart(2, '0');
+        
+        // If the year is already 4 digits, use it as is, otherwise add "20" prefix
+        let year = parts[1];
+        if (year.length === 2) {
+          year = `20${year}`;
+        } else if (year.length !== 4) {
+          year = year.padStart(4, '0');
+        }
+        
+        date = `${year}-${month}-01`;
+      } else {
+        console.log('Invalid date format. Using current date.');
+        const now = new Date();
+        date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+      }
+    }
     
     // Create the slug for the album
     const albumSlug = createSlug(title);
@@ -72,7 +99,6 @@ async function createAlbum() {
     // Create the metadata file in the photos directory
     const metadata = {
       title: title,
-      description: description,
       date: date,
       created: new Date().toISOString()
     };
@@ -86,12 +112,9 @@ async function createAlbum() {
     const frontMatter = `---
 layout: album
 title: ${title}
-description: ${description}
 date: ${date}
 slug: ${albumSlug}
 ---
-
-${description}
 `;
     
     fs.writeFileSync(
