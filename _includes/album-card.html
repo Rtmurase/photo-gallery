@@ -1,23 +1,38 @@
-{% assign album_slug = album.slug | default: album.path %}
-{% assign album_dir = 'photos/' | append: album_slug %}
-
+{% assign album_dir = 'photos/' | append: album.slug %}
 {% assign all_files = site.static_files %}
 {% assign image_files = '' | split: '' %}
 
-{% for file in all_files %}
-  {% if file.path contains album_dir %}
-    {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
-      {% assign image_files = image_files | push: file %}
-    {% endif %}
-  {% endif %}
-{% endfor %}
+{% comment %}First look for the specified cover image if one exists{% endcomment %}
+{% assign has_cover = false %}
+{% assign cover_url = "/assets/images/placeholder.jpg" | relative_url %}
 
-{% if image_files.size > 0 %}
-  {% assign cover_image = image_files[0] %}
-  {% assign cover_url = cover_image.path | relative_url %}
-{% else %}
-  {% assign cover_url = "/assets/images/placeholder.jpg" | relative_url %}
+{% if album.cover_image %}
+  {% for file in all_files %}
+    {% if file.path contains album_dir and file.path contains album.cover_image %}
+      {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+        {% assign cover_url = file.path | relative_url %}
+        {% assign has_cover = true %}
+        {% break %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
 {% endif %}
+
+{% comment %}If no cover image was specified or found, use the first image in the directory{% endcomment %}
+{% unless has_cover %}
+  {% for file in all_files %}
+    {% if file.path contains album_dir %}
+      {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+        {% assign image_files = image_files | push: file %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if image_files.size > 0 %}
+    {% assign cover_image = image_files[0] %}
+    {% assign cover_url = cover_image.path | relative_url %}
+  {% endif %}
+{% endunless %}
 
 <div class="album-card">
   <a href="{{ album.url | relative_url }}" class="album-link">
