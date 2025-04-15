@@ -17,7 +17,9 @@
 
   {% include footer.html %}
 
+  <!-- Load gallery.js first to ensure its functions are available -->
   <script src="{{ '/assets/js/gallery.js' | relative_url }}"></script>
+  <!-- Then load masonry.js which may depend on gallery.js functions -->
   <script src="{{ '/assets/js/masonry.js' | relative_url }}"></script>
 </body>
 </html>

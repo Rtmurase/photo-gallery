@@ -1,8 +1,14 @@
 /**
- * Enhanced gallery and lightbox functionality with mobile swipe and thumbnails
+ * Gallery and lightbox functionality - Complete Fix
  */
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Check if a lightbox already exists and remove it to avoid duplicates
+  const existingLightbox = document.querySelector('.lightbox-overlay');
+  if (existingLightbox) {
+    existingLightbox.parentNode.removeChild(existingLightbox);
+  }
+
   // If we're on a gallery page
   if (document.querySelector('.gallery')) {
     createLightbox();
@@ -12,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Create the lightbox HTML structure
 function createLightbox() {
+  // Create new lightbox structure
   const lightboxOverlay = document.createElement('div');
   lightboxOverlay.className = 'lightbox-overlay';
   
@@ -51,6 +58,7 @@ function createLightbox() {
   lightboxOverlay.appendChild(lightboxContent);
   lightboxOverlay.appendChild(thumbnailCarousel);
   
+  // Append to the body element directly, not inside any other container
   document.body.appendChild(lightboxOverlay);
   
   // Close lightbox when clicking on the overlay background
@@ -86,28 +94,23 @@ function setupSwipeEvents(element) {
   let touchStartX = 0;
   let touchEndX = 0;
   
-  // Track touch start position
   element.addEventListener('touchstart', function(event) {
     touchStartX = event.changedTouches[0].screenX;
   }, false);
   
-  // Handle swipe on touch end
   element.addEventListener('touchend', function(event) {
     touchEndX = event.changedTouches[0].screenX;
     handleSwipe();
   }, false);
   
-  // Determine swipe direction and navigate
   function handleSwipe() {
-    const swipeThreshold = 50; // Minimum distance to be considered a swipe
+    const swipeThreshold = 50;
     
     if (touchEndX < touchStartX - swipeThreshold) {
-      // Swiped left - go to next photo
       goToNextPhoto();
     }
     
     if (touchEndX > touchStartX + swipeThreshold) {
-      // Swiped right - go to previous photo
       goToPreviousPhoto();
     }
   }
@@ -119,33 +122,28 @@ function createThumbnails(currentIndex) {
   if (links.length === 0) return;
   
   const thumbnailCarousel = document.querySelector('.thumbnail-carousel');
-  thumbnailCarousel.innerHTML = ''; // Clear existing thumbnails
+  if (!thumbnailCarousel) return;
   
-  // Determine what thumbnails to show (2 before, current, 2 after)
+  thumbnailCarousel.innerHTML = '';
+  
   const total = links.length;
   const thumbnailCount = Math.min(5, total);
   
-  // Calculate start index for thumbnails
   let startIdx;
   if (total <= 5) {
-    // If we have 5 or fewer images, show all
     startIdx = 0;
   } else {
-    // Show 2 before current, but handle edge cases
     startIdx = currentIndex - 2;
     
-    // Adjust if near the start
     if (startIdx < 0) {
       startIdx = 0;
     }
     
-    // Adjust if near the end
     if (startIdx > total - thumbnailCount) {
       startIdx = total - thumbnailCount;
     }
   }
   
-  // Create thumbnail elements
   for (let i = 0; i < thumbnailCount; i++) {
     const idx = (startIdx + i) % total;
     const link = links[idx];
@@ -162,7 +160,6 @@ function createThumbnails(currentIndex) {
     
     thumbnail.appendChild(thumbnailImg);
     
-    // Add click event to thumbnail
     thumbnail.addEventListener('click', function() {
       window.galleryState.currentIndex = idx;
       openLightbox(link.href, link.getAttribute('data-title'));
@@ -175,29 +172,44 @@ function createThumbnails(currentIndex) {
 // Set up click listeners for gallery items
 function setupGalleryListeners() {
   const galleryLinks = document.querySelectorAll('.gallery-item a.lightbox');
-  let currentIndex = 0;
   
   galleryLinks.forEach((link, index) => {
-    link.addEventListener('click', function(event) {
+    // First remove any existing click handler to avoid duplicates
+    const newLink = link.cloneNode(true);
+    if (link.parentNode) {
+      link.parentNode.replaceChild(newLink, link);
+    }
+    
+    newLink.addEventListener('click', function(event) {
       event.preventDefault();
-      currentIndex = index;
-      window.galleryState.currentIndex = currentIndex;
+      
+      // Update gallery state
+      window.galleryState = {
+        links: galleryLinks,
+        currentIndex: index
+      };
+      
+      // Open lightbox
       openLightbox(this.href, this.getAttribute('data-title'));
     });
   });
-  
-  // Store the gallery links and current index in the window for navigation
-  window.galleryState = {
-    links: galleryLinks,
-    currentIndex: currentIndex
-  };
 }
 
 // Open the lightbox with the selected image
 function openLightbox(imageSrc, imageTitle) {
   const lightboxOverlay = document.querySelector('.lightbox-overlay');
+  if (!lightboxOverlay) {
+    console.error('Lightbox overlay not found');
+    return;
+  }
+  
   const lightboxImage = lightboxOverlay.querySelector('.lightbox-content img');
   const lightboxCaption = lightboxOverlay.querySelector('.lightbox-caption');
+  
+  if (!lightboxImage || !lightboxCaption) {
+    console.error('Lightbox elements not found');
+    return;
+  }
   
   // Set the image source and title
   lightboxImage.src = imageSrc;
@@ -214,17 +226,23 @@ function openLightbox(imageSrc, imageTitle) {
 // Close the lightbox
 function closeLightbox() {
   const lightboxOverlay = document.querySelector('.lightbox-overlay');
+  if (!lightboxOverlay) return;
+  
   lightboxOverlay.classList.remove('active');
   document.body.style.overflow = ''; // Restore scrolling
   
   // Clear the image source after transition
   setTimeout(() => {
     const lightboxImage = lightboxOverlay.querySelector('.lightbox-content img');
-    lightboxImage.src = '';
+    if (lightboxImage) {
+      lightboxImage.src = '';
+    }
     
     // Clear thumbnails
     const thumbnailCarousel = lightboxOverlay.querySelector('.thumbnail-carousel');
-    thumbnailCarousel.innerHTML = '';
+    if (thumbnailCarousel) {
+      thumbnailCarousel.innerHTML = '';
+    }
   }, 300);
 }
 
@@ -235,13 +253,9 @@ function goToPreviousPhoto() {
   const { links, currentIndex } = window.galleryState;
   if (links.length === 0) return;
   
-  // Calculate the previous index (loop back to the end if at the beginning)
   const prevIndex = (currentIndex === 0) ? links.length - 1 : currentIndex - 1;
-  
-  // Update the current index
   window.galleryState.currentIndex = prevIndex;
   
-  // Get the previous link and open its image
   const prevLink = links[prevIndex];
   openLightbox(prevLink.href, prevLink.getAttribute('data-title'));
 }
@@ -253,13 +267,9 @@ function goToNextPhoto() {
   const { links, currentIndex } = window.galleryState;
   if (links.length === 0) return;
   
-  // Calculate the next index (loop back to the beginning if at the end)
   const nextIndex = (currentIndex === links.length - 1) ? 0 : currentIndex + 1;
-  
-  // Update the current index
   window.galleryState.currentIndex = nextIndex;
   
-  // Get the next link and open its image
   const nextLink = links[nextIndex];
   openLightbox(nextLink.href, nextLink.getAttribute('data-title'));
 }

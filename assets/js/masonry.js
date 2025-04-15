@@ -1,5 +1,5 @@
 /**
- * Improved masonry layout with loading state
+ * Fixed masonry layout with proper spacing
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Create and show loading state
+// Create loading overlay
 function setupLoadingState() {
   const gallery = document.querySelector('.gallery.masonry-gallery');
   if (!gallery) return;
@@ -58,11 +58,11 @@ function removeLoadingState() {
       if (loadingOverlay && loadingOverlay.parentNode) {
         loadingOverlay.parentNode.removeChild(loadingOverlay);
       }
-    }, 500); // After fade animation
+    }, 500);
   }
 }
 
-// Debounce function to limit how often a function is called
+// Debounce function
 function debounce(func, wait) {
   let timeout;
   return function() {
@@ -75,7 +75,7 @@ function debounce(func, wait) {
   };
 }
 
-// Initialize masonry layout
+// Initialize masonry layout with absolute positioning
 function initMasonry() {
   const gallery = document.querySelector('.gallery.masonry-gallery');
   if (!gallery) return;
@@ -86,10 +86,13 @@ function initMasonry() {
   // Reset any previous layout
   items.forEach(item => {
     item.style.position = '';
-    item.style.top = '';
     item.style.left = '';
+    item.style.top = '';
     item.style.width = '';
   });
+  
+  // Make sure gallery is a relative container
+  gallery.style.position = 'relative';
   
   // Determine the number of columns based on container width
   let numColumns;
@@ -102,112 +105,56 @@ function initMasonry() {
   }
   
   // Store the current column count as a data attribute on the gallery
-  // This can be useful for other scripts that might need to know the column count
   gallery.dataset.columns = numColumns;
   
-  // Update the number of bottom albums to match column count
-  updateBottomAlbums(numColumns);
+  // Spacing between items
+  const gap = 4;
   
-  // Calculate adaptive gap size based on screen width to match homepage
-  let gutterSize;
-  if (galleryWidth < 480) {
-    gutterSize = 2; // Minimal gap on very small screens
-  } else if (galleryWidth < 768) {
-    gutterSize = 3; // Small gap on tablets
-  } else {
-    gutterSize = 4; // Standard gap on larger screens
-  }
-  
-  const columnWidth = galleryWidth / numColumns;
-  const actualColumnWidth = columnWidth - gutterSize; // Account for gutters
+  // Calculate column width
+  const columnWidth = (galleryWidth / numColumns) - (gap * (numColumns - 1) / numColumns);
   
   // Create array to track column heights
   const columnHeights = Array(numColumns).fill(0);
   
-  // Position each item
+  // Position each item using absolute positioning
   items.forEach(item => {
     // Find the column with the shortest height
     const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
     
-    // Position the item
+    // Position the item absolutely
     item.style.position = 'absolute';
-    item.style.width = `${actualColumnWidth}px`;
-    item.style.left = `${(shortestColumn * columnWidth) + (gutterSize / 2)}px`;
-    item.style.top = `${columnHeights[shortestColumn] + (gutterSize / 2)}px`;
+    item.style.width = `${columnWidth}px`;
+    item.style.left = `${shortestColumn * (columnWidth + gap)}px`;
+    item.style.top = `${columnHeights[shortestColumn]}px`;
     
-    // Set adaptive padding based on screen width
-    const paddingSize = (galleryWidth < 480) ? 2 : (galleryWidth < 768) ? 3 : 4;
-    item.style.padding = `${paddingSize}px`;
+    // Make sure any anchor inside takes up the whole space
+    const anchor = item.querySelector('a');
+    if (anchor) {
+      anchor.style.display = 'block';
+      anchor.style.width = '100%';
+    }
     
-    // Get image height considering aspect ratio
+    // Get image to calculate height based on aspect ratio
     const img = item.querySelector('img');
-    const aspectRatio = img.naturalWidth / img.naturalHeight || 1; // Fallback to 1 if dimensions not available
-    const itemHeight = actualColumnWidth / aspectRatio;
+    // Default to square if image isn't loaded yet
+    let aspectRatio = 1; 
     
-    // Update the column height
-    columnHeights[shortestColumn] += itemHeight + gutterSize; // Add gutter space
+    if (img.complete && img.naturalWidth) {
+      aspectRatio = img.naturalWidth / img.naturalHeight;
+    }
+    
+    // Calculate item height based on aspect ratio
+    const itemHeight = columnWidth / aspectRatio;
+    
+    // Update column height
+    columnHeights[shortestColumn] += itemHeight + gap;
   });
   
-  // Set gallery height to tallest column plus extra padding
-  gallery.style.height = `${Math.max(...columnHeights) + gutterSize}px`;
-}
-
-// Function to load images and then initialize masonry
-function loadImages() {
-  const gallery = document.querySelector('.gallery.masonry-gallery');
-  if (!gallery) return;
+  // Set gallery height to tallest column
+  gallery.style.height = `${Math.max(...columnHeights)}px`;
   
-  const images = Array.from(gallery.querySelectorAll('img'));
-  if (images.length === 0) {
-    removeLoadingState();
-    return;
-  }
-  
-  let loadedCount = 0;
-  let hasInitialized = false;
-  
-  function checkAllLoaded() {
-    loadedCount++;
-    
-    // Show layout once at least half the images or 5 images have loaded
-    if (!hasInitialized && (loadedCount >= Math.min(5, Math.ceil(images.length / 2)))) {
-      initMasonry();
-      hasInitialized = true;
-    }
-    
-    // When all images are loaded, finalize layout and remove loading state
-    if (loadedCount === images.length) {
-      initMasonry();
-      removeLoadingState();
-      
-      // Re-initialize after a short delay to ensure all images are properly rendered
-      setTimeout(initMasonry, 300);
-    }
-  }
-  
-  // Wait for all images to load
-  images.forEach(img => {
-    if (img.complete) {
-      checkAllLoaded();
-    } else {
-      img.addEventListener('load', checkAllLoaded);
-      img.addEventListener('error', () => {
-        // Handle image error
-        img.src = '/assets/images/placeholder.jpg'; // Replace with error placeholder
-        checkAllLoaded();
-      });
-    }
-  });
-  
-  // If no images are found or they're taking too long, initialize anyway after a timeout
-  setTimeout(() => {
-    if (loadedCount < images.length) {
-      initMasonry();
-      if (loadedCount === 0) {
-        removeLoadingState();
-      }
-    }
-  }, 5000); // 5 second fallback
+  // Update the number of bottom albums to match column count
+  updateBottomAlbums(numColumns);
 }
 
 // Function to update bottom album display based on column count
@@ -245,25 +192,57 @@ function updateBottomAlbums(columns) {
   }
 }
 
-// Run after initial DOM load
-window.addEventListener('load', function() {
-  // If images haven't loaded after 8 seconds, remove loading state anyway
-  setTimeout(() => {
+// Function to load images and then initialize masonry
+function loadImages() {
+  const gallery = document.querySelector('.gallery.masonry-gallery');
+  if (!gallery) return;
+  
+  const images = Array.from(gallery.querySelectorAll('img'));
+  if (images.length === 0) {
     removeLoadingState();
-  }, 8000);
-});
-
-// Handle window resize events
-window.addEventListener('resize', debounce(function() {
-  initMasonry();
-  updateBottomAlbums();
-}, 200));
-
-// Also reinitialize when orientationchange happens (for mobile)
-window.addEventListener('orientationchange', function() {
-  // Wait for orientation change to complete
+    return;
+  }
+  
+  let loadedCount = 0;
+  let hasInitialized = false;
+  
+  function checkAllLoaded() {
+    loadedCount++;
+    
+    // When at least half the images are loaded, initialize layout
+    if (!hasInitialized && loadedCount >= Math.ceil(images.length / 2)) {
+      initMasonry();
+      hasInitialized = true;
+    }
+    
+    // When all images are loaded, remove loading state and finalize layout
+    if (loadedCount === images.length) {
+      removeLoadingState();
+      // Re-initialize to get the final layout with all images
+      setTimeout(initMasonry, 100);
+    }
+  }
+  
+  // Wait for all images to load
+  images.forEach(img => {
+    if (img.complete) {
+      checkAllLoaded();
+    } else {
+      img.addEventListener('load', checkAllLoaded);
+      img.addEventListener('error', () => {
+        // Handle image error
+        img.src = '/assets/images/placeholder.jpg';
+        checkAllLoaded();
+      });
+    }
+  });
+  
+  // Fallback if images take too long to load
   setTimeout(() => {
-    initMasonry();
-    updateBottomAlbums();
-  }, 300);
-});
+    if (!hasInitialized) {
+      initMasonry();
+      hasInitialized = true;
+    }
+    setTimeout(removeLoadingState, 1000);
+  }, 5000);
+}

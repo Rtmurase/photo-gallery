@@ -248,7 +248,7 @@ img {
   }
 }
 
-// Gallery - Original Grid Layout
+// Standard Gallery Layout (for non-masonry)
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -295,14 +295,14 @@ img {
   height: 40px;
   border-radius: 50%;
   border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top-color: $accent-color;
+  border-top-color: #000;
   animation: spin 1s infinite linear;
 }
 
 .loading-text {
   margin-top: 1rem;
   font-size: 1rem;
-  color: $text-color;
+  color: #333;
 }
 
 @keyframes spin {
@@ -315,49 +315,55 @@ img {
   opacity: 0;
 }
 
-// Masonry Gallery - New Layout with adaptive padding
+// Masonry Gallery with absolute positioning
 .gallery.masonry-gallery {
   position: relative;
-  margin: 0 auto;
   width: 100%;
+  min-height: 200px; /* Minimum height until layout is calculated */
+  margin: 0 auto;
   opacity: 1;
   transition: opacity 0.5s ease;
-  /* Height will be set dynamically by JavaScript */
-  display: block; /* Override grid display from regular gallery */
-  
-  .gallery-item {
-    box-sizing: border-box;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    border-radius: 3px;
-    padding: 4px; // Default thinner padding to match homepage
-    
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-      transition: transform 0.3s ease;
-      object-fit: contain; /* Changed from cover to maintain aspect ratio */
-      height: auto; /* Allow height to be determined by content */
-      border-radius: 2px;
-    }
-    
-    &:hover {
-      transform: translateY(-5px);
-    }
-  }
+}
+
+.gallery.masonry-gallery .gallery-item {
+  position: absolute;
+  overflow: hidden;
+  margin: 0;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+
+.gallery.masonry-gallery .gallery-item a.lightbox {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
+.gallery.masonry-gallery .gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+  object-fit: cover;
+}
+
+.gallery.masonry-gallery .gallery-item:hover img {
+  transform: scale(1.03);
 }
 
 // Bottom Albums Section
 .bottom-albums-section {
-  margin-top: 4rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
   width: 100%;
 }
 
 .bottom-albums-title {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 1.8rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -365,17 +371,17 @@ img {
 
 .bottom-albums-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns by default, matching masonry max */
-  gap: 0.5rem; /* Reduced gap to match homepage spacing */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem; /* Match homepage spacing */
   width: 100%;
 }
 
 .bottom-album-card {
   overflow: hidden;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: 0;
-  padding-bottom: 150%; /* ~2:3 portrait aspect ratio to match album covers */
+  padding-bottom: 150%; /* ~2:3 portrait aspect ratio */
   position: relative;
 }
 
@@ -423,7 +429,6 @@ img {
   transition: transform 0.3s ease;
 }
 
-/* Hover effects for bottom album cards */
 .bottom-album-link:hover .bottom-album-image {
   transform: scale(1.05);
 }
@@ -436,19 +441,149 @@ img {
   transform: translateY(0);
 }
 
+// Lightbox
+.lightbox-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 9999 !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lightbox-overlay.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: calc(100% - 4rem);
+  max-height: calc(100% - 12rem);
+  margin-bottom: 1.5rem;
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 70vh;
+  margin: 0 auto;
+  display: block;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.lightbox-caption {
+  position: absolute;
+  bottom: -2rem;
+  left: 0;
+  right: 0;
+  color: white;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.close-lightbox {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+.prev-button,
+.next-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 1rem 0.5rem;
+  z-index: 10000;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, background 0.2s ease;
+  border-radius: 3px;
+}
+
+.prev-button:hover,
+.next-button:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.prev-button {
+  left: 1rem;
+}
+
+.next-button {
+  right: 1rem;
+}
+
+// Thumbnail carousel
+.thumbnail-carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 500px;
+  height: 80px;
+  gap: 8px;
+  padding: 0 20px;
+  overflow-x: auto;
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.thumbnail-carousel::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+.thumbnail {
+  width: 80px;
+  height: 60px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.thumbnail.active {
+  border-color: white;
+  transform: scale(1.05);
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 // Responsive styles
 @media (max-width: 1024px) {
   .albums-container {
     grid-template-columns: repeat(3, 1fr); /* Still 3 per row on medium screens */
   }
   
-  /* Keep bottom albums at 3 columns to match */
   .bottom-albums-container {
     grid-template-columns: repeat(3, 1fr);
-  }
-  
-  .gallery.masonry-gallery .gallery-item {
-    padding: 4px; /* Consistent thin padding */
   }
 }
 
@@ -465,10 +600,6 @@ img {
     }
   }
   
-  .gallery.masonry-gallery .gallery-item {
-    padding: 3px; /* Reduced padding for tablets */
-  }
-  
   .page-header .page-title {
     font-size: 2rem;
   }
@@ -477,10 +608,9 @@ img {
     font-size: 1.75rem;
   }
   
-  /* Match bottom albums to the 2-column layout */
   .bottom-albums-container {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.4rem; /* Reduced gap for smaller screens */
+    gap: 0.4rem;
   }
   
   .bottom-albums-title {
@@ -491,41 +621,27 @@ img {
     font-size: 1.2rem;
   }
   
-  .bottom-album-card {
-    padding-bottom: 140%; /* Slightly shorter on medium screens */
-  }
-  
   .gallery-loading-overlay {
     height: 250px;
   }
   
-  /* Lightbox responsive adjustments */
-  .lightbox-overlay {
-    .lightbox-content {
-      max-width: calc(100% - 2rem);
-      max-height: calc(100% - 8rem - 80px);
-      
-      img {
-        max-height: 65vh;
-      }
-    }
-    
-    .prev-button,
-    .next-button {
-      font-size: 1.5rem;
-      padding: 0.8rem 0.4rem;
-    }
+  .lightbox-content {
+    max-width: calc(100% - 2rem);
+  }
+  
+  .prev-button,
+  .next-button {
+    font-size: 1.5rem;
+    padding: 0.75rem 0.4rem;
   }
   
   .thumbnail-carousel {
     height: 60px;
-    max-width: 100%;
-    padding: 0 10px;
-    
-    .thumbnail {
-      width: 60px;
-      height: 45px;
-    }
+  }
+  
+  .thumbnail {
+    width: 60px;
+    height: 45px;
   }
 }
 
@@ -546,17 +662,13 @@ img {
     }
   }
   
-  .gallery.masonry-gallery .gallery-item {
-    padding: 2px; /* Minimal padding for mobile */
-  }
-  
   .page-header {
     margin-bottom: 2rem;
   }
   
   .bottom-albums-container {
     grid-template-columns: repeat(2, 1fr); /* Keep 2 columns on small devices */
-    gap: 0.3rem; /* Even smaller gap for mobile */
+    gap: 0.3rem;
   }
   
   .bottom-albums-title {
@@ -568,38 +680,27 @@ img {
     font-size: 1.2rem;
   }
   
-  .bottom-album-card {
-    padding-bottom: 130%; /* Even shorter on small screens */
-  }
-  
   .gallery-loading-overlay {
     height: 200px;
   }
   
-  /* Smaller lightbox for mobile */
-  .lightbox-overlay {
-    .lightbox-content {
-      max-width: calc(100% - 1rem);
-      
-      img {
-        max-height: 60vh;
-      }
-    }
-    
-    .prev-button,
-    .next-button {
-      font-size: 1.2rem;
-      padding: 0.6rem 0.3rem;
-    }
+  .lightbox-content {
+    max-width: calc(100% - 1rem);
+  }
+  
+  .prev-button,
+  .next-button {
+    font-size: 1.2rem;
+    padding: 0.5rem 0.3rem;
   }
   
   .thumbnail-carousel {
     height: 50px;
     gap: 4px;
-    
-    .thumbnail {
-      width: 45px;
-      height: 35px;
-    }
+  }
+  
+  .thumbnail {
+    width: 45px;
+    height: 35px;
   }
 }
