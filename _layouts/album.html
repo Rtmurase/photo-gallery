@@ -6,7 +6,7 @@ layout: default
   <div class="container">
     <header class="album-header">
       <h1 class="album-title">{{ page.title }}</h1>
-      <p class="album-date">{{ page.date | date: "%B %Y" }}</p>
+      <p class="album-date">{{ page.date | date: "%B %d, %Y" }}</p>
       <p class="album-description">{{ page.description }}</p>
     </header>
 
@@ -23,11 +23,11 @@ layout: default
     {% endfor %}
 
     {% if image_files.size > 0 %}
-      <div class="gallery">
+      <div class="gallery masonry-gallery">
         {% for image in image_files %}
           <div class="gallery-item">
-            <a href="{{ image.path | relative_url }}" class="lightbox" data-title="">
-              <img src="{{ image.path | relative_url }}" alt="">
+            <a href="{{ image.path | relative_url }}" class="lightbox" data-title="{{ image.name | replace: image.extname, '' | replace: '-', ' ' | replace: '_', ' ' | capitalize }}">
+              <img src="{{ image.path | relative_url }}" alt="{{ image.name | replace: image.extname, '' | replace: '-', ' ' | replace: '_', ' ' | capitalize }}">
             </a>
           </div>
         {% endfor %}
@@ -39,5 +39,64 @@ layout: default
     <div class="album-nav">
       <a href="{{ '/' | relative_url }}" class="back-link">← Back to Albums</a>
     </div>
+    
+    <!-- Cover image section at the bottom for albums that match column count -->
+    {% assign sorted_albums = site.albums | sort: 'date' | reverse %}
+    {% assign other_albums = '' | split: '' %}
+    
+    <!-- Collect all albums except the current one -->
+    {% for album in sorted_albums %}
+      {% if album.slug != page.slug %}
+        {% assign other_albums = other_albums | push: album %}
+      {% endif %}
+    {% endfor %}
+    
+    <!-- If we have at least one other album -->
+    {% if other_albums.size > 0 %}
+      <div class="bottom-albums-section">
+        <h3 class="bottom-albums-title">More Albums</h3>
+        <div class="bottom-albums-container">
+          <!-- We'll show a dynamic number of albums based on screen size with CSS -->
+          <!-- The container will match the column count automatically -->
+          
+          <!-- Use modulo arithmetic to "randomize" the selection -->
+          {% assign max_display = 3 %}
+          {% assign actual_display = other_albums.size | at_most: max_display %}
+          
+          {% for i in (1..actual_display) %}
+            {% assign index = forloop.index0 | times: 17 | modulo: other_albums.size %}
+            {% assign album = other_albums[index] %}
+            
+            {% assign album_dir = 'photos/' | append: album.slug %}
+            {% assign album_files = '' | split: '' %}
+            
+            {% for file in all_files %}
+              {% if file.path contains album_dir %}
+                {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+                  {% assign album_files = album_files | push: file %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+            
+            {% if album_files.size > 0 %}
+              {% assign cover_image = album_files[0] %}
+              {% assign cover_url = cover_image.path | relative_url %}
+            {% else %}
+              {% assign cover_url = "/assets/images/placeholder.jpg" | relative_url %}
+            {% endif %}
+            
+            <div class="bottom-album-card">
+              <a href="{{ album.url | relative_url }}" class="bottom-album-link">
+                <div class="bottom-album-image" style="background-image: url('{{ cover_url }}')">
+                  <div class="bottom-album-overlay">
+                    <h2 class="bottom-album-title">{{ album.title }}</h2>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
   </div>
 </div>

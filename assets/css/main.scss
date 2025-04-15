@@ -248,7 +248,7 @@ img {
   }
 }
 
-// Gallery
+// Gallery - Original Grid Layout
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -272,93 +272,132 @@ img {
   }
 }
 
-// Lightbox
-.lightbox-overlay {
-  position: fixed;
+// Masonry Gallery - New Layout
+.gallery.masonry-gallery {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  /* Height will be set dynamically by JavaScript */
+  display: block; /* Override grid display from regular gallery */
+  
+  .gallery-item {
+    padding: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+      object-fit: contain; /* Changed from cover to maintain aspect ratio */
+      height: auto; /* Allow height to be determined by content */
+    }
+    
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+// Bottom Albums Section
+.bottom-albums-section {
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.bottom-albums-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bottom-albums-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns by default, matching masonry max */
+  gap: 1rem;
+  width: 100%;
+}
+
+.bottom-album-card {
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 0;
+  padding-bottom: 75%; /* 4:3 aspect ratio */
+  position: relative;
+}
+
+.bottom-album-link {
+  display: block;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.9);
+}
+
+.bottom-album-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  transition: transform 0.5s ease;
+}
+
+.bottom-album-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  
-  &.active {
-    opacity: 1;
-    visibility: visible;
-  }
-  
-  .lightbox-content {
-    position: relative;
-    max-width: calc(100% - 4rem);
-    max-height: calc(100% - 8rem);
-    
-    img {
-      max-width: 100%;
-      max-height: 80vh;
-      margin: 0 auto;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-    
-    .lightbox-caption {
-      position: absolute;
-      bottom: -2rem;
-      left: 0;
-      right: 0;
-      color: white;
-      text-align: center;
-      padding: 0.5rem;
-    }
-  }
-  
-  .close-lightbox {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 1001;
-  }
-  
-  .prev-button,
-  .next-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 1rem;
-    z-index: 1001;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-    
-    &:hover {
-      opacity: 1;
-    }
-  }
-  
-  .prev-button {
-    left: 1rem;
-  }
-  
-  .next-button {
-    right: 1rem;
-  }
+  transition: background-color 0.3s ease;
+}
+
+.bottom-album-title {
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transform: translateY(5px);
+  transition: transform 0.3s ease;
+}
+
+/* Hover effects for bottom album cards */
+.bottom-album-link:hover .bottom-album-image {
+  transform: scale(1.05);
+}
+
+.bottom-album-link:hover .bottom-album-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.bottom-album-link:hover .bottom-album-title {
+  transform: translateY(0);
 }
 
 // Responsive styles
 @media (max-width: 1024px) {
   .albums-container {
     grid-template-columns: repeat(3, 1fr); /* Still 3 per row on medium screens */
+  }
+  
+  /* Keep bottom albums at 3 columns to match */
+  .bottom-albums-container {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -382,6 +421,19 @@ img {
   .album-page .album-header .album-title {
     font-size: 1.75rem;
   }
+  
+  /* Match bottom albums to the 2-column layout */
+  .bottom-albums-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .bottom-albums-title {
+    font-size: 1.6rem;
+  }
+  
+  .bottom-album-title {
+    font-size: 1.2rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -403,5 +455,19 @@ img {
   
   .page-header {
     margin-bottom: 2rem;
+  }
+  
+  .bottom-albums-container {
+    grid-template-columns: 1fr; /* Stack vertically on small screens */
+    gap: 1.5rem;
+  }
+  
+  .bottom-albums-title {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .bottom-album-title {
+    font-size: 1.2rem;
   }
 }
