@@ -272,19 +272,65 @@ img {
   }
 }
 
-// Masonry Gallery - New Layout
+// Loading state for masonry gallery
+.gallery-loading-overlay {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 10;
+  transition: opacity 0.5s ease;
+}
+
+.gallery-loading-overlay.fade-out {
+  opacity: 0;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: $accent-color;
+  animation: spin 1s infinite linear;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: $text-color;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Hide gallery while loading
+.gallery.masonry-gallery.loading {
+  opacity: 0;
+}
+
+// Masonry Gallery - New Layout with adaptive padding
 .gallery.masonry-gallery {
   position: relative;
   margin: 0 auto;
   width: 100%;
+  opacity: 1;
+  transition: opacity 0.5s ease;
   /* Height will be set dynamically by JavaScript */
   display: block; /* Override grid display from regular gallery */
   
   .gallery-item {
-    padding: 8px;
     box-sizing: border-box;
     overflow: hidden;
     transition: transform 0.3s ease;
+    border-radius: 3px;
+    padding: 4px; // Default thinner padding to match homepage
     
     img {
       width: 100%;
@@ -293,6 +339,7 @@ img {
       transition: transform 0.3s ease;
       object-fit: contain; /* Changed from cover to maintain aspect ratio */
       height: auto; /* Allow height to be determined by content */
+      border-radius: 2px;
     }
     
     &:hover {
@@ -319,7 +366,7 @@ img {
 .bottom-albums-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 columns by default, matching masonry max */
-  gap: 1rem;
+  gap: 0.5rem; /* Reduced gap to match homepage spacing */
   width: 100%;
 }
 
@@ -328,7 +375,7 @@ img {
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   height: 0;
-  padding-bottom: 75%; /* 4:3 aspect ratio */
+  padding-bottom: 150%; /* ~2:3 portrait aspect ratio to match album covers */
   position: relative;
 }
 
@@ -399,6 +446,10 @@ img {
   .bottom-albums-container {
     grid-template-columns: repeat(3, 1fr);
   }
+  
+  .gallery.masonry-gallery .gallery-item {
+    padding: 4px; /* Consistent thin padding */
+  }
 }
 
 @media (max-width: 768px) {
@@ -414,6 +465,10 @@ img {
     }
   }
   
+  .gallery.masonry-gallery .gallery-item {
+    padding: 3px; /* Reduced padding for tablets */
+  }
+  
   .page-header .page-title {
     font-size: 2rem;
   }
@@ -425,6 +480,7 @@ img {
   /* Match bottom albums to the 2-column layout */
   .bottom-albums-container {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem; /* Reduced gap for smaller screens */
   }
   
   .bottom-albums-title {
@@ -433,6 +489,43 @@ img {
   
   .bottom-album-title {
     font-size: 1.2rem;
+  }
+  
+  .bottom-album-card {
+    padding-bottom: 140%; /* Slightly shorter on medium screens */
+  }
+  
+  .gallery-loading-overlay {
+    height: 250px;
+  }
+  
+  /* Lightbox responsive adjustments */
+  .lightbox-overlay {
+    .lightbox-content {
+      max-width: calc(100% - 2rem);
+      max-height: calc(100% - 8rem - 80px);
+      
+      img {
+        max-height: 65vh;
+      }
+    }
+    
+    .prev-button,
+    .next-button {
+      font-size: 1.5rem;
+      padding: 0.8rem 0.4rem;
+    }
+  }
+  
+  .thumbnail-carousel {
+    height: 60px;
+    max-width: 100%;
+    padding: 0 10px;
+    
+    .thumbnail {
+      width: 60px;
+      height: 45px;
+    }
   }
 }
 
@@ -453,13 +546,17 @@ img {
     }
   }
   
+  .gallery.masonry-gallery .gallery-item {
+    padding: 2px; /* Minimal padding for mobile */
+  }
+  
   .page-header {
     margin-bottom: 2rem;
   }
   
   .bottom-albums-container {
-    grid-template-columns: 1fr; /* Stack vertically on small screens */
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr); /* Keep 2 columns on small devices */
+    gap: 0.3rem; /* Even smaller gap for mobile */
   }
   
   .bottom-albums-title {
@@ -469,5 +566,40 @@ img {
   
   .bottom-album-title {
     font-size: 1.2rem;
+  }
+  
+  .bottom-album-card {
+    padding-bottom: 130%; /* Even shorter on small screens */
+  }
+  
+  .gallery-loading-overlay {
+    height: 200px;
+  }
+  
+  /* Smaller lightbox for mobile */
+  .lightbox-overlay {
+    .lightbox-content {
+      max-width: calc(100% - 1rem);
+      
+      img {
+        max-height: 60vh;
+      }
+    }
+    
+    .prev-button,
+    .next-button {
+      font-size: 1.2rem;
+      padding: 0.6rem 0.3rem;
+    }
+  }
+  
+  .thumbnail-carousel {
+    height: 50px;
+    gap: 4px;
+    
+    .thumbnail {
+      width: 45px;
+      height: 35px;
+    }
   }
 }

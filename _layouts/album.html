@@ -48,6 +48,9 @@ layout: default
     {% for album in sorted_albums %}
       {% if album.slug != page.slug %}
         {% assign other_albums = other_albums | push: album %}
+        {% if forloop.index >= 3 %}
+          {% break %}
+        {% endif %}
       {% endif %}
     {% endfor %}
     
@@ -55,18 +58,9 @@ layout: default
     {% if other_albums.size > 0 %}
       <div class="bottom-albums-section">
         <h3 class="bottom-albums-title">More Albums</h3>
-        <div class="bottom-albums-container">
-          <!-- We'll show a dynamic number of albums based on screen size with CSS -->
-          <!-- The container will match the column count automatically -->
-          
-          <!-- Use modulo arithmetic to "randomize" the selection -->
-          {% assign max_display = 3 %}
-          {% assign actual_display = other_albums.size | at_most: max_display %}
-          
-          {% for i in (1..actual_display) %}
-            {% assign index = forloop.index0 | times: 17 | modulo: other_albums.size %}
-            {% assign album = other_albums[index] %}
-            
+        <div class="bottom-albums-container" style="gap: 0.5rem;">
+          <!-- We're generating 3 albums max, but JS will hide extras based on column count -->          
+          {% for album in other_albums %}
             {% assign album_dir = 'photos/' | append: album.slug %}
             {% assign album_files = '' | split: '' %}
             

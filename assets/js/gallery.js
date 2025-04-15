@@ -1,5 +1,5 @@
 /**
- * Gallery and lightbox functionality
+ * Enhanced gallery and lightbox functionality with mobile swipe and thumbnails
  */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -40,10 +40,16 @@ function createLightbox() {
   nextButton.innerHTML = '&#10095;';
   nextButton.addEventListener('click', goToNextPhoto);
   
+  // Create thumbnail carousel
+  const thumbnailCarousel = document.createElement('div');
+  thumbnailCarousel.className = 'thumbnail-carousel';
+  
+  // Add all elements to the lightbox overlay
   lightboxOverlay.appendChild(closeButton);
   lightboxOverlay.appendChild(prevButton);
   lightboxOverlay.appendChild(nextButton);
   lightboxOverlay.appendChild(lightboxContent);
+  lightboxOverlay.appendChild(thumbnailCarousel);
   
   document.body.appendChild(lightboxOverlay);
   
@@ -53,6 +59,9 @@ function createLightbox() {
       closeLightbox();
     }
   });
+  
+  // Setup touch events for mobile swipe
+  setupSwipeEvents(lightboxOverlay);
   
   // Handle keyboard events
   document.addEventListener('keydown', function(event) {
@@ -72,6 +81,97 @@ function createLightbox() {
   });
 }
 
+// Setup swipe events for mobile navigation
+function setupSwipeEvents(element) {
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  // Track touch start position
+  element.addEventListener('touchstart', function(event) {
+    touchStartX = event.changedTouches[0].screenX;
+  }, false);
+  
+  // Handle swipe on touch end
+  element.addEventListener('touchend', function(event) {
+    touchEndX = event.changedTouches[0].screenX;
+    handleSwipe();
+  }, false);
+  
+  // Determine swipe direction and navigate
+  function handleSwipe() {
+    const swipeThreshold = 50; // Minimum distance to be considered a swipe
+    
+    if (touchEndX < touchStartX - swipeThreshold) {
+      // Swiped left - go to next photo
+      goToNextPhoto();
+    }
+    
+    if (touchEndX > touchStartX + swipeThreshold) {
+      // Swiped right - go to previous photo
+      goToPreviousPhoto();
+    }
+  }
+}
+
+// Create and populate thumbnail carousel
+function createThumbnails(currentIndex) {
+  const { links } = window.galleryState || { links: [] };
+  if (links.length === 0) return;
+  
+  const thumbnailCarousel = document.querySelector('.thumbnail-carousel');
+  thumbnailCarousel.innerHTML = ''; // Clear existing thumbnails
+  
+  // Determine what thumbnails to show (2 before, current, 2 after)
+  const total = links.length;
+  const thumbnailCount = Math.min(5, total);
+  
+  // Calculate start index for thumbnails
+  let startIdx;
+  if (total <= 5) {
+    // If we have 5 or fewer images, show all
+    startIdx = 0;
+  } else {
+    // Show 2 before current, but handle edge cases
+    startIdx = currentIndex - 2;
+    
+    // Adjust if near the start
+    if (startIdx < 0) {
+      startIdx = 0;
+    }
+    
+    // Adjust if near the end
+    if (startIdx > total - thumbnailCount) {
+      startIdx = total - thumbnailCount;
+    }
+  }
+  
+  // Create thumbnail elements
+  for (let i = 0; i < thumbnailCount; i++) {
+    const idx = (startIdx + i) % total;
+    const link = links[idx];
+    
+    const thumbnail = document.createElement('div');
+    thumbnail.className = 'thumbnail';
+    if (idx === currentIndex) {
+      thumbnail.classList.add('active');
+    }
+    
+    const thumbnailImg = document.createElement('img');
+    thumbnailImg.src = link.href;
+    thumbnailImg.alt = link.getAttribute('data-title') || '';
+    
+    thumbnail.appendChild(thumbnailImg);
+    
+    // Add click event to thumbnail
+    thumbnail.addEventListener('click', function() {
+      window.galleryState.currentIndex = idx;
+      openLightbox(link.href, link.getAttribute('data-title'));
+    });
+    
+    thumbnailCarousel.appendChild(thumbnail);
+  }
+}
+
 // Set up click listeners for gallery items
 function setupGalleryListeners() {
   const galleryLinks = document.querySelectorAll('.gallery-item a.lightbox');
@@ -81,6 +181,7 @@ function setupGalleryListeners() {
     link.addEventListener('click', function(event) {
       event.preventDefault();
       currentIndex = index;
+      window.galleryState.currentIndex = currentIndex;
       openLightbox(this.href, this.getAttribute('data-title'));
     });
   });
@@ -102,6 +203,9 @@ function openLightbox(imageSrc, imageTitle) {
   lightboxImage.src = imageSrc;
   lightboxCaption.textContent = imageTitle || '';
   
+  // Create thumbnails
+  createThumbnails(window.galleryState.currentIndex);
+  
   // Show the lightbox
   lightboxOverlay.classList.add('active');
   document.body.style.overflow = 'hidden'; // Prevent scrolling
@@ -117,6 +221,10 @@ function closeLightbox() {
   setTimeout(() => {
     const lightboxImage = lightboxOverlay.querySelector('.lightbox-content img');
     lightboxImage.src = '';
+    
+    // Clear thumbnails
+    const thumbnailCarousel = lightboxOverlay.querySelector('.thumbnail-carousel');
+    thumbnailCarousel.innerHTML = '';
   }, 300);
 }
 
