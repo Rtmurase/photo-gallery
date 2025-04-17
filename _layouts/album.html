@@ -40,15 +40,12 @@ layout: default
       <a href="{{ '/' | relative_url }}" class="back-link">← Back to Albums</a>
     </div>
     
-    <!-- Cover image section at the bottom for albums that match column count -->
     {% assign sorted_albums = site.albums | sort: 'date' | reverse %}
     {% assign other_albums = '' | split: '' %}
-    
-    <!-- Collect all albums except the current one -->
     {% for album in sorted_albums %}
       {% if album.slug != page.slug %}
         {% assign other_albums = other_albums | push: album %}
-        {% if forloop.index >= 3 %}
+        {% if other_albums.size >= 3 %}
           {% break %}
         {% endif %}
       {% endif %}
