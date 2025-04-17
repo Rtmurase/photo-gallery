@@ -13,7 +13,7 @@ permalink: /contact/
 
     <div class="contact-container">
       <div class="contact-form">
-        <form action="https://formspree.io/f/xvgknqrl" method="POST">
+        <form id="contactForm" action="https://formspree.io/f/xvgknqrl" method="POST">
           <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" required>
@@ -34,8 +34,69 @@ permalink: /contact/
             <textarea id="message" name="message" rows="5" required></textarea>
           </div>
           
+          <div class="form-status"></div>
+          
           <button type="submit" class="submit-button">Send Message</button>
         </form>
+        
+        <script>
+          const contactForm = document.getElementById('contactForm');
+          const formStatus = document.querySelector('.form-status');
+          
+          if (contactForm) {
+            contactForm.addEventListener('submit', function(event) {
+              event.preventDefault();
+              
+              const formData = new FormData(contactForm);
+              const submitButton = contactForm.querySelector('.submit-button');
+              
+              // Disable button during submission
+              submitButton.disabled = true;
+              submitButton.textContent = 'Sending...';
+              
+              // Clear any previous status
+              formStatus.textContent = '';
+              formStatus.className = 'form-status';
+              
+              fetch(contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                  'Accept': 'application/json'
+                }
+              })
+              .then(response => {
+                if (response.ok) {
+                  return response.json();
+                }
+                throw new Error('Network response was not ok.');
+              })
+              .then(data => {
+                // Show success message
+                formStatus.textContent = 'Thank you for your message!';
+                formStatus.className = 'form-status success';
+                
+                // Reset the form
+                contactForm.reset();
+                
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Send Message';
+              })
+              .catch(error => {
+                // Show error message
+                formStatus.textContent = 'Sorry, there was a problem sending your message. Please try again.';
+                formStatus.className = 'form-status error';
+                
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Send Message';
+                
+                console.error('Error:', error);
+              });
+            });
+          }
+        </script>
       </div>
     </div>
   </div>
