@@ -189,6 +189,79 @@ img {
   }
 }
 
+// Stuff container and cards
+.stuff-container {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.stuff-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row on desktop */
+  width: 100%;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.stuff-card {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1/1; /* Square aspect ratio */
+  
+  .stuff-link {
+    color: $text-color;
+    display: block;
+    height: 100%;
+  }
+  
+  .stuff-cover {
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    
+    .stuff-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      padding: 1rem;
+      text-align: center;
+    }
+    
+    &:hover .stuff-overlay {
+      opacity: 1;
+    }
+  }
+  
+  .stuff-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .stuff-date {
+    color: $muted-color;
+    font-size: 1rem;
+  }
+}
+
+.no-stuff {
+  text-align: center;
+  padding: 3rem 0;
+  color: $muted-color;
+}
+
 // Album page
 .album-page {
   .container {
@@ -441,6 +514,146 @@ img {
   transform: translateY(0);
 }
 
+// Stuff item page
+.stuff-item-page {
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  .stuff-item-header {
+    margin-bottom: 2rem;
+    text-align: center;
+    
+    .stuff-item-title {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .stuff-item-date {
+      color: $muted-color;
+      margin-bottom: 1rem;
+    }
+    
+    .stuff-item-description {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  }
+  
+  .stuff-item-nav {
+    margin-top: 2rem;
+    text-align: center;
+    
+    .back-link {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid $accent-color;
+      color: $accent-color;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: $accent-color;
+        color: white;
+      }
+    }
+  }
+}
+
+// Bottom Stuff Section
+.bottom-stuff-section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.bottom-stuff-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bottom-stuff-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem; /* Match homepage spacing */
+  width: 100%;
+}
+
+.bottom-stuff-card {
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 0;
+  padding-bottom: 100%; /* Square aspect ratio */
+  position: relative;
+}
+
+.bottom-stuff-link {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bottom-stuff-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  transition: transform 0.5s ease;
+}
+
+.bottom-stuff-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.bottom-stuff-title {
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  transform: translateY(5px);
+  transition: transform 0.3s ease;
+}
+
+.bottom-stuff-link:hover .bottom-stuff-image {
+  transform: scale(1.05);
+}
+
+.bottom-stuff-link:hover .bottom-stuff-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.bottom-stuff-link:hover .bottom-stuff-title {
+  transform: translateY(0);
+}
+
 // Lightbox
 .lightbox-overlay {
   position: fixed !important;
@@ -582,13 +795,25 @@ img {
     grid-template-columns: repeat(3, 1fr); /* Still 3 per row on medium screens */
   }
   
+  .stuff-grid {
+    grid-template-columns: repeat(3, 1fr); /* Still 3 per row on medium screens */
+  }
+  
   .bottom-albums-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .bottom-stuff-container {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .albums-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row on tablet/mobile */
+  }
+  
+  .stuff-grid {
     grid-template-columns: repeat(2, 1fr); /* 2 cards per row on tablet/mobile */
   }
   
@@ -604,11 +829,12 @@ img {
     font-size: 2rem;
   }
   
-  .album-page .album-header .album-title {
-    font-size: 1.75rem;
+  .bottom-albums-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
   }
   
-  .bottom-albums-container {
+  .bottom-stuff-container {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.4rem;
   }
@@ -617,7 +843,15 @@ img {
     font-size: 1.6rem;
   }
   
+  .bottom-stuff-title {
+    font-size: 1.6rem;
+  }
+  
   .bottom-album-title {
+    font-size: 1.2rem;
+  }
+  
+  .bottom-stuff-title {
     font-size: 1.2rem;
   }
   
@@ -650,7 +884,15 @@ img {
     grid-template-columns: repeat(2, 1fr); /* Still 2 per row on very small screens */
   }
   
+  .stuff-grid {
+    grid-template-columns: repeat(2, 1fr); /* Still 2 per row on very small screens */
+  }
+  
   .album-card .album-title {
+    font-size: 1.2rem;
+  }
+  
+  .stuff-card .stuff-title {
     font-size: 1.2rem;
   }
   
@@ -671,12 +913,26 @@ img {
     gap: 0.3rem;
   }
   
+  .bottom-stuff-container {
+    grid-template-columns: repeat(2, 1fr); /* Keep 2 columns on small devices */
+    gap: 0.3rem;
+  }
+  
   .bottom-albums-title {
     font-size: 1.4rem;
     margin-bottom: 1.5rem;
   }
   
+  .bottom-stuff-title {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  
   .bottom-album-title {
+    font-size: 1.2rem;
+  }
+  
+  .bottom-stuff-title {
     font-size: 1.2rem;
   }
   

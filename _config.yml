@@ -30,6 +30,9 @@ collections:
   albums:
     output: true
     permalink: /album/:path/
+  stuff:
+    output: true
+    permalink: /stuff/:path/
 
 defaults:
   - scope:
@@ -37,6 +40,11 @@ defaults:
       type: "albums"
     values:
       layout: "album"
+  - scope:
+      path: ""
+      type: "stuff"
+    values:
+      layout: "stuff-item"
   - scope:
       path: ""
     values:

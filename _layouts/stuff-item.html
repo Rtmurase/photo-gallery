@@ -1,0 +1,92 @@
+---
+layout: default
+---
+
+<div class="stuff-item-page">
+  <div class="container">
+    <header class="stuff-item-header">
+      <h1 class="stuff-item-title">{{ page.title }}</h1>
+      <p class="stuff-item-date">{{ page.date | date: "%B %Y" }}</p>
+      <p class="stuff-item-description">{{ page.description }}</p>
+    </header>
+
+    {% assign stuff_dir = 'stuff/' | append: page.slug %}
+    {% assign all_files = site.static_files %}
+    {% assign image_files = '' | split: '' %}
+    
+    {% for file in all_files %}
+      {% if file.path contains stuff_dir %}
+        {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+          {% assign image_files = image_files | push: file %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if image_files.size > 0 %}
+      <div class="gallery masonry-gallery">
+        {% for image in image_files %}
+          <div class="gallery-item">
+            <a href="{{ image.path | relative_url }}" class="lightbox" data-title="{{ image.name | replace: image.extname, '' | replace: '-', ' ' | replace: '_', ' ' | capitalize }}">
+              <img src="{{ image.path | relative_url }}" alt="{{ image.name | replace: image.extname, '' | replace: '-', ' ' | replace: '_', ' ' | capitalize }}">
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-photos">No images found for this item yet.</p>
+    {% endif %}
+
+    <div class="stuff-item-nav">
+      <a href="{{ "/stuff/" | relative_url }}" class="back-link">← Back to Stuff</a>
+    </div>
+    
+    {% assign sorted_stuff = site.stuff | sort: 'date' | reverse %}
+    {% assign other_stuff = '' | split: '' %}
+    {% for item in sorted_stuff %}
+      {% if item.slug != page.slug %}
+        {% assign other_stuff = other_stuff | push: item %}
+        {% if other_stuff.size >= 3 %}
+          {% break %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    
+    <!-- If we have at least one other stuff item -->
+    {% if other_stuff.size > 0 %}
+      <div class="bottom-stuff-section">
+        <h3 class="bottom-stuff-title">More Stuff</h3>
+        <div class="bottom-stuff-container" style="gap: 0.5rem;">
+          {% for item in other_stuff %}
+            {% assign item_dir = 'stuff/' | append: item.slug %}
+            {% assign item_files = '' | split: '' %}
+            
+            {% for file in all_files %}
+              {% if file.path contains item_dir %}
+                {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+                  {% assign item_files = item_files | push: file %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+            
+            {% if item_files.size > 0 %}
+              {% assign cover_image = item_files[0] %}
+              {% assign cover_url = cover_image.path | relative_url %}
+            {% else %}
+              {% assign cover_url = "/assets/images/placeholder.jpg" | relative_url %}
+            {% endif %}
+            
+            <div class="bottom-stuff-card">
+              <a href="{{ item.url | relative_url }}" class="bottom-stuff-link">
+                <div class="bottom-stuff-image" style="background-image: url('{{ cover_url }}')">
+                  <div class="bottom-stuff-overlay">
+                    <h2 class="bottom-stuff-title">{{ item.title }}</h2>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div> 

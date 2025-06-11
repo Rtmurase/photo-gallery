@@ -1,0 +1,46 @@
+{% assign stuff_dir = 'stuff/' | append: item.slug %}
+{% assign all_files = site.static_files %}
+{% assign image_files = '' | split: '' %}
+
+{% comment %}First look for the specified cover image if one exists{% endcomment %}
+{% assign has_cover = false %}
+{% assign cover_url = "/assets/images/placeholder.jpg" | relative_url %}
+
+{% if item.cover_image %}
+  {% for file in all_files %}
+    {% if file.path contains stuff_dir and file.path contains item.cover_image %}
+      {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+        {% assign cover_url = file.path | relative_url %}
+        {% assign has_cover = true %}
+        {% break %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% comment %}If no cover image was specified or found, use the first image in the directory{% endcomment %}
+{% unless has_cover %}
+  {% for file in all_files %}
+    {% if file.path contains stuff_dir %}
+      {% if file.extname == '.jpg' or file.extname == '.jpeg' or file.extname == '.png' or file.extname == '.gif' %}
+        {% assign image_files = image_files | push: file %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if image_files.size > 0 %}
+    {% assign cover_image = image_files[0] %}
+    {% assign cover_url = cover_image.path | relative_url %}
+  {% endif %}
+{% endunless %}
+
+<div class="stuff-card">
+  <a href="{{ item.url | relative_url }}" class="stuff-link">
+    <div class="stuff-cover" style="background-image: url('{{ cover_url }}')">
+      <div class="stuff-overlay">
+        <h2 class="stuff-title">{{ item.title }}</h2>
+        <p class="stuff-date">{{ item.date | date: "%B %Y" }}</p>
+      </div>
+    </div>
+  </a>
+</div> 
