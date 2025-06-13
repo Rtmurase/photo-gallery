@@ -6,11 +6,6 @@ permalink: /stuff/
 
 <div class="stuff-page">
   <div class="container">
-    <header class="page-header">
-      <h1 class="page-title">Stuff</h1>
-      <p class="page-subtitle">Random things and miscellaneous content</p>
-    </header>
-
     <div class="stuff-container">
       {% if site.stuff %}
         {% assign sorted_stuff = site.stuff | sort: 'date' | reverse %}
