@@ -90,6 +90,6 @@ title: Saucy.life
 <!-- Footer -->
 <footer class="footer">
   <div class="container">
-    <p>&copy; 2024 Saucy.life. All rights reserved.</p>
+    <p>&copy; 2025 Saucy.life. All rights reserved.</p>
   </div>
 </footer>
