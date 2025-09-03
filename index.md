@@ -1,14 +1,13 @@
 ---
 layout: homepage
-title: Yoga from Anywhere
+title: Saucy.life
 ---
 
 <!-- Header / Hero Section -->
 <section class="hero">
   <div class="hero-content">
-    <div class="logo">SAUCY.LIFE</div>
-    <h1>Yoga from Anywhere</h1>
-    <p>Live and online classes designed to bring balance, strength, and calm into your daily life.</p>
+    <h1>Sweat. Flow. Sit. Get Saucy.</h1>
+    <p>Saucy.life is remote yoga for yogis who already know the basics and want more. Expect bold, playful, challenging vinyasa flows balanced with grounding guided insight meditations. It's sweaty, saucy, and still.</p>
     <a href="#classes" class="cta-button">Join a Class</a>
   </div>
 </section>
@@ -18,8 +17,8 @@ title: Yoga from Anywhere
   <div class="container">
     <div class="about-content">
       <h2>About</h2>
-      <div class="about-photo">🧘</div>
-      <p>I'm [Your Name], a certified yoga teacher specializing in mindful, accessible yoga for all levels. My goal is to help you build strength, reduce stress, and feel more connected — no matter where you are.</p>
+      <div class="about-photo">🧘‍♂️</div>
+      <p>Hi, I'm Ryan. I received my 200-hour and 300-hour yoga teacher trainings in Bali, where I deepened my love for dynamic vinyasa flow and insight meditation. Saucy.life is where I share that passion with students who want to push their edge, find their flow, and sit in stillness.</p>
     </div>
   </div>
 </section>
@@ -30,24 +29,26 @@ title: Yoga from Anywhere
     <h2>Classes & Offerings</h2>
     <div class="classes-grid">
       <div class="class-card">
-        <h3>Group Online Classes</h3>
-        <p>Weekly live Zoom sessions for all levels. Join our community and practice together from anywhere.</p>
-        <div class="price">Starting at $15/class</div>
+        <h3>Group Classes</h3>
+        <p>Live every Monday, Wednesday, and Friday at 10:00am PT.</p>
+        <p>Intermediate/advanced vinyasa flow to fire you up, sweat it out, and keep it saucy.</p>
+        <p><em>Recordings available if you can't join live.</em></p>
+        <div class="price">$10</div>
         <a href="#contact" class="book-button">Book Now</a>
       </div>
       
       <div class="class-card">
         <h3>Private 1:1 Sessions</h3>
-        <p>Personalized practice tailored to your needs and goals. Perfect for beginners or those wanting focused attention.</p>
-        <div class="price">Starting at $75/session</div>
+        <p>Personalized sessions tailored to your practice and goals — whether it's refining flow, building strength, or deepening meditation.</p>
+        <div class="price">$75</div>
         <a href="#contact" class="book-button">Book Now</a>
       </div>
       
       <div class="class-card">
         <h3>On-Demand Library</h3>
-        <p>Access to recorded classes anytime. Practice at your own pace with our growing library of sessions.</p>
-        <div class="price">$25/month</div>
-        <a href="#contact" class="book-button">Get Access</a>
+        <p>Practice on your schedule with access to past classes, meditations, and mini-flows.</p>
+        <div class="price">Coming Soon</div>
+        <a href="#contact" class="book-button">Get Notified</a>
       </div>
     </div>
   </div>
@@ -57,31 +58,13 @@ title: Yoga from Anywhere
 <section class="contact" id="contact">
   <div class="container">
     <h2>Get in Touch</h2>
-    <p>Ready to start your yoga journey? Let's connect and find the perfect practice for you.</p>
+    <p>Have questions or want to book a class?</p>
     
-    <form class="contact-form" action="#" method="POST">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" rows="5" placeholder="Tell me about your yoga experience and what you're looking for..."></textarea>
-      </div>
-      
-      <button type="submit" class="book-button">Send Message</button>
-    </form>
-    
-    <div class="social-links">
-      <a href="#" title="Instagram">📷</a>
-      <a href="#" title="YouTube">📺</a>
-      <a href="#" title="Email">✉️</a>
+    <div class="contact-info">
+      <a href="mailto:saucy.life.yoga@gmail.com" class="email-link">
+        <span class="email-icon">📧</span>
+        saucy.life.yoga@gmail.com
+      </a>
     </div>
   </div>
 </section>
@@ -89,6 +72,6 @@ title: Yoga from Anywhere
 <!-- Footer -->
 <footer class="footer">
   <div class="container">
-    <p>&copy; 2024 SAUCY.LIFE. All rights reserved.</p>
+    <p>&copy; 2024 Saucy.life. All rights reserved.</p>
   </div>
 </footer>

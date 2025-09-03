@@ -8,13 +8,13 @@
 body {
   font-family: 'Open Sans', sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #fafafa;
+  color: #1F2147;
+  background-color: #F7F3ED;
 }
 
 /* Header / Hero Section */
 .hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1F2147 0%, #FF7A1A 100%);
   color: white;
   text-align: center;
   padding: 120px 20px 80px;
@@ -67,20 +67,20 @@ body {
 
 .cta-button {
   display: inline-block;
-  background: white;
-  color: #667eea;
+  background: linear-gradient(135deg, #FF7A1A, #FF5C70);
+  color: white;
   padding: 15px 30px;
   text-decoration: none;
   border-radius: 50px;
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(255, 122, 26, 0.3);
 }
 
 .cta-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(255, 122, 26, 0.4);
 }
 
 /* About Section */
@@ -105,13 +105,13 @@ body {
   font-family: 'Montserrat', sans-serif;
   font-size: 2.5rem;
   margin-bottom: 2rem;
-  color: #333;
+  color: #1F2147;
 }
 
 .about p {
   font-size: 1.2rem;
   line-height: 1.8;
-  color: #666;
+  color: #1F2147;
   margin-bottom: 2rem;
 }
 
@@ -120,7 +120,7 @@ body {
   height: 200px;
   border-radius: 50%;
   margin: 0 auto 2rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #FF7A1A, #FF5C70);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,7 +132,7 @@ body {
 /* Classes Section */
 .classes {
   padding: 80px 20px;
-  background: #f8f9fa;
+  background: #F7F3ED;
 }
 
 .classes h2 {
@@ -140,7 +140,7 @@ body {
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 3rem;
-  color: #333;
+  color: #1F2147;
 }
 
 .classes-grid {
@@ -155,47 +155,56 @@ body {
   padding: 2rem;
   border-radius: 15px;
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(31, 33, 71, 0.1);
   transition: transform 0.3s ease;
+  border: 2px solid transparent;
 }
 
 .class-card:hover {
   transform: translateY(-5px);
+  border-color: #FF5C70;
 }
 
 .class-card h3 {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: #333;
+  color: #1F2147;
 }
 
 .class-card p {
-  color: #666;
-  margin-bottom: 1.5rem;
+  color: #1F2147;
+  margin-bottom: 1rem;
+}
+
+.class-card em {
+  color: #FF5C70;
+  font-style: italic;
 }
 
 .class-card .price {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #667eea;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FF7A1A;
   margin-bottom: 1.5rem;
 }
 
 .book-button {
   display: inline-block;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #FF7A1A, #FF5C70);
   color: white;
   padding: 12px 25px;
   text-decoration: none;
   border-radius: 25px;
   font-weight: 600;
   transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
 }
 
 .book-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 122, 26, 0.3);
 }
 
 /* Contact Section */
@@ -209,46 +218,36 @@ body {
   font-family: 'Montserrat', sans-serif;
   font-size: 2.5rem;
   margin-bottom: 2rem;
-  color: #333;
+  color: #1F2147;
 }
 
 .contact p {
   font-size: 1.2rem;
-  color: #666;
+  color: #1F2147;
   margin-bottom: 2rem;
 }
 
-.contact-form {
-  max-width: 500px;
-  margin: 0 auto 3rem;
+.contact-info {
+  margin-bottom: 3rem;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
+.email-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  color: #FF7A1A;
+  text-decoration: none;
   font-weight: 600;
-  color: #333;
+  transition: color 0.3s ease;
 }
 
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
+.email-link:hover {
+  color: #FF5C70;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #667eea;
+.email-icon {
+  font-size: 1.5rem;
 }
 
 .social-links {
@@ -260,7 +259,7 @@ body {
   margin: 0 10px;
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #FF7A1A, #FF5C70);
   color: white;
   text-decoration: none;
   border-radius: 50%;
@@ -271,11 +270,12 @@ body {
 
 .social-links a:hover {
   transform: translateY(-3px);
+  background: linear-gradient(135deg, #FF5C70, #B7F0D3);
 }
 
 /* Footer */
 .footer {
-  background: #333;
+  background: #1F2147;
   color: white;
   text-align: center;
   padding: 2rem 20px;
