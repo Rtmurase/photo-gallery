@@ -37,7 +37,7 @@ layout: default
     {% endif %}
 
     <div class="album-nav">
-      <a href="{{ '/' | relative_url }}" class="back-link">← Back to Albums</a>
+      <a href="{{ '/rm/' | relative_url }}" class="back-link">← Back to Albums</a>
     </div>
     
     {% assign sorted_albums = site.albums | sort: 'date' | reverse %}
