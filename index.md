@@ -8,7 +8,7 @@ title: Saucy.life
   <div class="hero-content">
     <h1>Sweat. Flow. Sit. Get Saucy.</h1>
     <p>Saucy.life is remote yoga for yogis who already know the basics and want more. Expect bold, playful, challenging vinyasa flows balanced with grounding guided insight meditations. It's sweaty, saucy, and still.</p>
-    <a href="#classes" class="cta-button">Join a Class</a>
+    <a href="https://momence.com/u/saucy-life-qnK4wp" class="cta-button">Join a Class</a>
   </div>
 </section>
 
@@ -17,7 +17,9 @@ title: Saucy.life
   <div class="container">
     <div class="about-content">
       <h2>About</h2>
-      <div class="about-photo">🧘‍♂️</div>
+      <div class="about-photo">
+        <img src="/assets/images/profilepic.png" alt="Ryan - Saucy.life Yoga Teacher">
+      </div>
       <p>Hi, I'm Ryan. I received my 200-hour and 300-hour yoga teacher trainings in Bali, where I deepened my love for dynamic vinyasa flow and insight meditation. Saucy.life is where I share that passion with students who want to push their edge, find their flow, and sit in stillness.</p>
     </div>
   </div>
@@ -30,18 +32,17 @@ title: Saucy.life
     <div class="classes-grid">
       <div class="class-card">
         <h3>Group Classes</h3>
-        <p>Live every Monday, Wednesday, and Friday at 10:00am PT.</p>
+        <p>Live every Monday, Wednesday, and Friday at 9:00am PT.</p>
         <p>Intermediate/advanced vinyasa flow to fire you up, sweat it out, and keep it saucy.</p>
-        <p><em>Recordings available if you can't join live.</em></p>
         <div class="price">$10</div>
-        <a href="#contact" class="book-button">Book Now</a>
+        <a href="https://momence.com/u/saucy-life-qnK4wp" class="book-button">Book Now</a>
       </div>
       
       <div class="class-card">
         <h3>Private 1:1 Sessions</h3>
         <p>Personalized sessions tailored to your practice and goals — whether it's refining flow, building strength, or deepening meditation.</p>
         <div class="price">$75</div>
-        <a href="#contact" class="book-button">Book Now</a>
+        <a href="mailto:saucy.life.yoga@gmail.com" class="book-button">Book Now</a>
       </div>
       
       <div class="class-card">
