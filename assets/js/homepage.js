@@ -26,6 +26,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
+  // Mobile navigation toggle
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', function() {
+      navMenu.classList.toggle('active');
+      navToggle.classList.toggle('active');
+    });
+    
+    // Close menu when clicking on a link
+    const navLinks = navMenu.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        navMenu.classList.remove('active');
+        navToggle.classList.remove('active');
+      });
+    });
+  }
+  
   // Smooth scrolling for anchor links
   const anchorLinks = document.querySelectorAll('a[href^="#"]');
   anchorLinks.forEach(link => {

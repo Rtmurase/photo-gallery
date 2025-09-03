@@ -3,6 +3,23 @@ layout: homepage
 title: Saucy.life
 ---
 
+<!-- Navigation Menu -->
+<nav class="homepage-nav">
+  <div class="nav-container">
+    <div class="nav-brand">Saucy Life Yoga</div>
+    <button class="nav-toggle" id="navToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#classes" class="nav-link">Classes</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
 <!-- Header / Hero Section -->
 <section class="hero">
   <div class="hero-content">
@@ -13,7 +30,7 @@ title: Saucy.life
 </section>
 
 <!-- About Section -->
-<section class="about">
+<section class="about" id="about">
   <div class="container">
     <div class="about-content">
       <h2>About</h2>
